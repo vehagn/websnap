@@ -1,0 +1,21 @@
+#!/bin/bash
+#Script for snapping timelapse pictures with the RPi camera, datestamping it and putting it on the web
+
+echo $BASHPID > timelapsepid
+
+while true
+do
+	RAW='/var/www/html/cam/img/cam_raw.jpg'
+	CAM='/var/www/html/cam/img/cam.jpg'
+	TIM='/var/www/html/cam/img/timelapse/tl_'
+
+	OPTIONS='-n -drc high -awb auto -ex sports -rot 180 -q 80'
+	DATE=$(date +'%Y-%m-%d_%H-%M-%S')
+
+	raspistill -o $RAW $OPTIONS
+	convert -pointsize 70 -fill white -draw "text 30,2434 '$(date)'" $RAW $CAM
+	mv $RAW $TIM$DATE.jpg
+
+	sudo find $TIM* -mtime +0 -delete;
+	sleep 40
+done

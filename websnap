@@ -1,0 +1,13 @@
+#!/bin/bash
+#Script for snapping a picture with the RPi camera, datestamping it and putting it on the web
+
+workdir=pwd
+cd /var/www/html/cam/img/
+
+OPTIONS='-n -mm spot -drc med -md 0 -awb auto -ex sports -rot 180 -q 80'
+DATE=$(date +'%Y-%m-%d_%H-%M-%S')
+ 
+raspistill -o cam_raw.jpg $OPTIONS
+convert -pointsize 70 -fill white -draw "text 30,2434 '$(date)'" cam_raw.jpg cam.jpg
+mv cam_raw.jpg $DATE.jpg
+
